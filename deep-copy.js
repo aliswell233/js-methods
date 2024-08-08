@@ -46,3 +46,24 @@ console.log(obj1);
 // deepCopy(original).then((copy)=>{
 //     console.log('copy', copy);
 // })
+function isObject(obj){
+  return typeof obj === 'object' && obj !== null
+}
+function deep(obj, hash = new WeakMap){
+  // 不是对象
+  if(!isObject(obj)) return obj
+  // 重复引用
+  if(hash.has(obj)){
+    return hash.get(obj)
+  }
+  hash.set(obj)
+  let target = Array.isArray(obj) ? [] : {}
+  Reflect.ownKeys(obj).forEach((key)=>{
+    if(isObject(obj[key])){
+      target[key] = deep(target[key], hash)
+    }else{
+      target[key] = obj[key]
+    }
+  })
+  return target
+}

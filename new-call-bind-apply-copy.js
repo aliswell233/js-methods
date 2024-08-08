@@ -7,10 +7,37 @@
 //   return obj
 // }
 
-console.log(print())
-if(true){
-    function print() {
-        console.log('林一一')
+Function.prototype.myCall = function(context, ...arg){
+    if(!context){
+        context = window
     }
+    const fn = Symbol()
+    context[fn] = this
+    return context[fn](...arg)
 }
-console.log(print())
+Function.prototype.myApply = function(context, arg){
+    if(!context){
+        context = window
+    }
+    const fn = Symbol()
+    context[fn] = this
+    return context[fn](...arg)
+}
+Function.prototype.myBind = function(context, ...arg){
+    if(!context){
+        context = window
+    }
+    const fn = Symbol()
+    context[fn] = this
+    const _this = this
+    const result = function(...innerArgs){
+        if(this instanceof _this){
+            this[fn] = _this
+            this[fn](...[...arg, ...innerArgs])
+        }else{
+            context[fn](...[...arg, ...innerArgs])
+        }
+    }
+    result.prototype = Object.create(this.prototype)
+    return result
+}
