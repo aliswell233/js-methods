@@ -103,3 +103,64 @@ console.log("第三步");
 //     undefined,
 //     result => { console.log('reject to', result);}
 // )
+
+
+/**
+ * 
+构造函数：
+  状态
+  成功数组
+  失败数组
+  resolve：
+    查状态
+    改状态
+    setTimeout
+    遍历成功数组
+  reject：
+    查状态
+    改状态
+    setTimeout
+    遍历失败数组
+  fn调用：
+    try catch后reject
+
+方法：
+  then:
+    处理成功回调 三元表达式 
+    处理失败回调 三元表达式 
+    return myPromise 实例:
+      成功数组添加 成功回调包装：
+                    try catch
+                    调用成功回调
+                    成功回调返回 instanceof myPromise ? 成功回调返回.then : resolve(成功回调返回)
+      失败数组添加 失败回调包装:
+                    try catch
+                    调用失败回调
+                    失败回调返回 instanceof myPromise ? 失败回调返回.then : reject(成功回调返回)
+  all:
+    static 
+    声明计数器和结果数组
+    return myPromise 实例:
+      遍历promise数组
+        Promise.resolve包裹每一项以检查是不是promise
+        then
+          结果数组[i] = val
+          计数器++
+          if(计数器 === promise数组长度) resolve(结果数组)
+        ,
+        (err) =>{ reject(err) }
+          
+  race:
+    static
+    return myPromise 实例:
+      遍历promise数组
+        Promise.resolve包裹每一项以检查是不是promise
+        then
+          (res) => {
+            //promise数组只要有任何一个promise 状态变更  就可以返回
+            resolve(res);
+          },
+        ,
+        (err) =>{ reject(err) }
+ */
+

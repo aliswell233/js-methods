@@ -30,3 +30,15 @@ function Foo(name) {
 //   console.log(instance instanceof Foo); // true
 //   console.log(instance.__proto__.__proto__ === obj.__proto__); // true
 //   console.log(instance instanceof Foo); // true
+
+
+const obj1 = {
+  a:1
+}
+
+function a(obj){
+  const tmp = obj
+  tmp.a = 2
+}
+a(obj1)
+console.log(obj1);
