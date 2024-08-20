@@ -164,3 +164,26 @@ console.log("第三步");
         (err) =>{ reject(err) }
  */
 
+
+
+//         new Promise((resolve, reject) => {
+//           setTimeout(() => resolve("请求结果"), 1000);
+//       }).then(result => {
+//           console.log(result); // "请求结果"
+//           return new Promise((resolve) => {
+//               setTimeout(() => resolve(result + " 处理完成"), 1000);
+//           }).then((result)=>{
+//             console.log('你好')
+//             return new Promise((resolve) => {resolve(result)})
+//           });
+//       }).then(result => {
+//           console.log(result); // "请求结果 处理完成"
+//           return result + " 继续处理";
+//       }).then(result => {
+//           console.log(result); // "请求结果 处理完成 继续处理"
+//       });
+
+//       "请求结果"
+// > "你好"
+// > "请求结果 处理完成"
+// > "请求结果 处理完成 继续处理"
