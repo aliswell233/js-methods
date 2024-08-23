@@ -1,44 +1,71 @@
-function Foo(name) {
-    this.name = name;
+function parseInput(input) {
+  // 按换行符分割输入
+  const lines = input.trim().split('\n');
+  
+  // 第一个数字表示模块总数
+  const N = parseInt(lines[0], 10);
+  
+  // 解析依赖关系
+  const dependencies = lines.slice(1).map(line => line.split(' ').map(Number));
+  
+  return { N, dependencies };
+}
+
+function calculateBatchInitializationTimes(N, dependencies) {
+  const graph = Array.from({ length: N }, () => []);
+  const inDegree = Array(N).fill(0);
+
+  dependencies.forEach((deps, i) => {
+      const depCount = deps[0];
+      for (let j = 1; j <= depCount; j++) {
+          const dependency = deps[j] - 1; // 转换为 0 索引
+          graph[dependency].push(i);
+          inDegree[i] += 1;
+      }
+  });
+
+  const queue = [];
+  for (let i = 0; i < N; i++) {
+      if (inDegree[i] === 0) {
+          queue.push(i);
+      }
   }
 
-//   const a = Object.create(Foo.prototype);
-//   console.log(a.__proto__ === Foo.prototype);
+  let batchCount = 0;
+  let processedModules = 0;
 
-//   function result(name) {
-//     this.name1 = name1
-//   }
+  while (queue.length > 0) {
+      batchCount += 1;
+      const currentBatchSize = queue.length;
 
-//   result.prototype = Object.create(Foo.prototype);
+      for (let i = 0; i < currentBatchSize; i++) {
+          const module = queue.shift();
+          processedModules += 1;
 
-//   console.log(result.prototype === Foo.prototype);
-  
-  Foo.prototype.sayName = function() {
-    console.log(this.name);
-  };
-  
-  const obj = { name: "Hello" };
-  const BoundFoo = Foo.bind(obj);
-  
-//   const instance = new BoundFoo("World");
-  
-//   console.log(instance.name); // 输出: "World"
-//   instance.sayName(); // 输出: "World"
-  
-// //   检查原型链关系
-//   console.log(instance.__proto__ === Foo.prototype); // true
-//   console.log(instance instanceof Foo); // true
-//   console.log(instance.__proto__.__proto__ === obj.__proto__); // true
-//   console.log(instance instanceof Foo); // true
+          graph[module].forEach(neighbor => {
+              inDegree[neighbor] -= 1;
+              if (inDegree[neighbor] === 0) {
+                  queue.push(neighbor);
+              }
+          });
+      }
+  }
 
+  if (processedModules !== N) {
+      return -1;
+  }
 
-const obj1 = {
-  a:1
+  return batchCount;
 }
 
-function a(obj){
-  const tmp = obj
-  tmp.a = 2
-}
-a(obj1)
-console.log(obj1);
+// 示例输入字符串
+const input = `5
+3 2 3 4
+1 5
+1 5
+1 5
+0`;
+
+const { N, dependencies } = parseInput(input);
+const result = calculateBatchInitializationTimes(N, dependencies);
+console.log(result);  // 输出: 3
