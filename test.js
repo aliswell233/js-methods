@@ -1,12 +1,16 @@
 function parseInput(input) {
   // 按换行符分割输入
   const lines = input.trim().split('\n');
+  console.log('lines', lines);
   
   // 第一个数字表示模块总数
   const N = parseInt(lines[0], 10);
+
+  console.log('N', N);
   
   // 解析依赖关系
   const dependencies = lines.slice(1).map(line => line.split(' ').map(Number));
+  console.log('dependencies', dependencies);
   
   return { N, dependencies };
 }
