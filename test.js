@@ -1,44 +1,45 @@
-function Foo(name) {
-    this.name = name;
-  }
-
-//   const a = Object.create(Foo.prototype);
-//   console.log(a.__proto__ === Foo.prototype);
-
-//   function result(name) {
-//     this.name1 = name1
-//   }
-
-//   result.prototype = Object.create(Foo.prototype);
-
-//   console.log(result.prototype === Foo.prototype);
+// const promise1 = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve("success");
+//     console.log("timer1");
+//   }, 1000);
+//   console.log("promise1里的内容");
+// });
+// const promise2 = promise1.then(() => {
+//   // throw new Error("error!!!");
+//   console.log('error');
   
-  Foo.prototype.sayName = function() {
-    console.log(this.name);
-  };
-  
-  const obj = { name: "Hello" };
-  const BoundFoo = Foo.bind(obj);
-  
-//   const instance = new BoundFoo("World");
-  
-//   console.log(instance.name); // 输出: "World"
-//   instance.sayName(); // 输出: "World"
-  
-// //   检查原型链关系
-//   console.log(instance.__proto__ === Foo.prototype); // true
-//   console.log(instance instanceof Foo); // true
-//   console.log(instance.__proto__.__proto__ === obj.__proto__); // true
-//   console.log(instance instanceof Foo); // true
+// });
+// console.log("promise1", promise1);
+// console.log("promise2", promise2);
+// setTimeout(() => {
+//   console.log("timer2");
+//   console.log("promise1", promise1);
+//   console.log("promise2", promise2);
+// }, 2000);
 
 
-const obj1 = {
-  a:1
+// var a = 0
+// console.log(a, window.a)
+// if(true){
+//   console.log(a, window.a)
+//   a = 1 
+//   console.log(a, window.a)
+//   function a(){}
+//   console.log(a, window.a)
+//   a = 21
+//   console.log(a, window.a)
+//   console.log('limian',a)
+// }
+// console.log('waimina',a)
+
+
+function render(tempate, data){
+  return tempate.replace(/{{\s*(\w+)\s*}}/, (match, key)=>{
+    return data[key] || ''
+  })
 }
 
-function a(obj){
-  const tmp = obj
-  tmp.a = 2
-}
-a(obj1)
-console.log(obj1);
+
+// 测试
+console.log(render("Hello, {{name}}!", { name: "World" })); 

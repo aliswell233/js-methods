@@ -23,3 +23,27 @@ function uniqueArr(arr){
 
 const tem = [1,3,1]
 console.log(typeof new Set(tem));
+
+
+Array.prototype.reduce = function(callback, pre){
+  for(let i = 0; i < this.length ; i++){
+    if(!pre){
+      pre = callback( this[i] , this[i+1], i + 1, this)
+      i++
+    }else{
+      pre = callback(pre, this[i], i , this)
+    }
+  }
+  
+  return pre
+}
+
+Array.prototype.flat = function(arr, dep = 1){
+
+}
+
+
+function compose(){
+  
+}
+
