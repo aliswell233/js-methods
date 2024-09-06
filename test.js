@@ -1,45 +1,75 @@
-// const promise1 = new Promise((resolve, reject) => {
-//   setTimeout(() => {
-//     resolve("success");
-//     console.log("timer1");
-//   }, 1000);
-//   console.log("promise1里的内容");
-// });
-// const promise2 = promise1.then(() => {
-//   // throw new Error("error!!!");
-//   console.log('error');
+function parseInput(input) {
+  // 按换行符分割输入
+  const lines = input.trim().split('\n');
+  console.log('lines', lines);
   
-// });
-// console.log("promise1", promise1);
-// console.log("promise2", promise2);
-// setTimeout(() => {
-//   console.log("timer2");
-//   console.log("promise1", promise1);
-//   console.log("promise2", promise2);
-// }, 2000);
+  // 第一个数字表示模块总数
+  const N = parseInt(lines[0], 10);
 
-
-// var a = 0
-// console.log(a, window.a)
-// if(true){
-//   console.log(a, window.a)
-//   a = 1 
-//   console.log(a, window.a)
-//   function a(){}
-//   console.log(a, window.a)
-//   a = 21
-//   console.log(a, window.a)
-//   console.log('limian',a)
-// }
-// console.log('waimina',a)
-
-
-function render(tempate, data){
-  return tempate.replace(/{{\s*(\w+)\s*}}/, (match, key)=>{
-    return data[key] || ''
-  })
+  console.log('N', N);
+  
+  // 解析依赖关系
+  const dependencies = lines.slice(1).map(line => line.split(' ').map(Number));
+  console.log('dependencies', dependencies);
+  
+  return { N, dependencies };
 }
 
+function calculateBatchInitializationTimes(N, dependencies) {
+  const graph = Array.from({ length: N }, () => []);
+  const inDegree = Array(N).fill(0);
 
-// 测试
-console.log(render("Hello, {{name}}!", { name: "World" })); 
+  dependencies.forEach((deps, i) => {
+      const depCount = deps[0];
+      for (let j = 1; j <= depCount; j++) {
+          const dependency = deps[j] - 1; // 转换为 0 索引
+          graph[dependency].push(i);
+          inDegree[i] += 1;
+      }
+  });
+
+  const queue = [];
+  for (let i = 0; i < N; i++) {
+      if (inDegree[i] === 0) {
+          queue.push(i);
+      }
+  }
+
+  let batchCount = 0;
+  let processedModules = 0;
+
+  while (queue.length > 0) {
+      batchCount += 1;
+      const currentBatchSize = queue.length;
+
+      for (let i = 0; i < currentBatchSize; i++) {
+          const module = queue.shift();
+          processedModules += 1;
+
+          graph[module].forEach(neighbor => {
+              inDegree[neighbor] -= 1;
+              if (inDegree[neighbor] === 0) {
+                  queue.push(neighbor);
+              }
+          });
+      }
+  }
+
+  if (processedModules !== N) {
+      return -1;
+  }
+
+  return batchCount;
+}
+
+// 示例输入字符串
+const input = `5
+3 2 3 4
+1 5
+1 5
+1 5
+0`;
+
+const { N, dependencies } = parseInput(input);
+const result = calculateBatchInitializationTimes(N, dependencies);
+console.log(result);  // 输出: 3

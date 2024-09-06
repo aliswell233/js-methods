@@ -77,15 +77,31 @@ class MyPromise {
   }
 }
 
-console.log("第一步");
-const p = new MyPromise((resolve, reject) => {
-  console.log("第二步");
-  setTimeout(() => {
-    resolve("成功");
-    console.log("第四步");
-  });
-  // throw new Error('白嫖不成功')
+console.log('script start');
+
+setTimeout(function() {
+  console.log('setTimeout');
+}, 0);
+
+new MyPromise(
+  (resolve, _) => {resolve()}
+).then(function() {
+  console.log('promise1');
+}).then(function() {
+  console.log('promise2');
 });
+
+console.log('script end');
+
+// console.log("第一步");
+// const p = new MyPromise((resolve, reject) => {
+//   console.log("第二步");
+//   setTimeout(() => {
+//     resolve("成功");
+//     console.log("第四步");
+//   });
+//   // throw new Error('白嫖不成功')
+// });
 
 p.then((result) => {
   console.log("resolve to", result);
